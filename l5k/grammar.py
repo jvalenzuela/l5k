@@ -1,0 +1,412 @@
+"""
+This module implements the grammar to parse L5K content into tokens.
+Other modules then convert these tokens into storage objects to be returned
+to the user.
+
+Many expressions defined here are liberal, possibly matching technically
+invalid content. This is in the interest of simplicity as strict
+expressions will invariably be more complicated; the intent of this
+module is to extract information from well-formed sources, i.e., files
+created by Logix5000.
+"""
+
+import pyparsing as pp
+
+
+def parse(filename):
+    """Parses an L5K file."""
+    with open(filename, "r", encoding="utf-8-sig") as f:
+        s = f.read()
+    result = prj.parse_string(s)
+
+
+# The remainder of this file is excluded from Black formatting to preserve
+# multi-line expressions, which Black may otherwise combine into a single
+# line.
+# fmt: off
+
+
+def component(name, expr):
+    """
+    Creates an expression to parse a component between <name> and END_<name>
+    keywords.
+    """
+    return (
+        pp.Suppress(pp.Keyword(name))
+        + expr
+        + pp.Suppress(pp.Keyword(f"END_{name}"))
+    )
+
+
+# Optional header at the beginning of the file.
+header = pp.Opt(pp.Suppress(
+    pp.Regex(r"\(\*+")
+    + pp.SkipTo("*)")
+    + pp.Literal("*)")
+))
+
+assign = pp.Suppress(pp.Literal(":="))
+terminator = pp.Suppress(pp.Literal(";"))
+
+# Version statement following the header.
+version = pp.Suppress(
+    pp.Keyword("IE_VER")
+    + assign
+    + pp.Regex(r"[\d.]+")
+    + terminator
+)
+
+# Module names can be the combination of parent modules, separated by colons.
+module_name = pp.Word(pp.alphanums + "_:")
+
+# Name of a data type, which can also be a module type.
+data_type_name = module_name
+
+# A single attribute key/value assignment.
+attribute = pp.Group(
+    pp.Word(pp.printables)
+    + assign
+    + (pp.QuotedString('"')
+       | pp.Word(pp.printables + " ", exclude_chars='",)').leave_whitespace())
+)
+
+attribute_list = pp.Opt(
+    pp.Suppress(pp.Literal("("))
+    + pp.Dict(pp.DelimitedList(attribute), asdict=True)
+    + pp.Suppress(pp.Literal(")")),
+    default={}
+)
+
+# A property is an assignment statement appearing in a component body
+# after the attribute list.
+prop_with_value = (
+    pp.common.identifier
+
+    # Some properties, e.g., safety CONNECTION InputData and OutputData,
+    # include an attribute list which does not appear in the reference
+    # documentation.
+    + attribute_list
+
+    + assign
+    + pp.Regex(r"[^;]+").leave_whitespace()
+    + terminator
+)
+
+# The assigned value is optional, such as with the undocumented
+# MODULE InputAliasComments.
+prop_no_value = (
+    pp.common.identifier
+    + attribute_list
+    + terminator
+)
+
+prop_list = pp.ZeroOrMore(prop_with_value | prop_no_value)
+
+# Comma-separated list of integers that may follow a tag name or type.
+array_dim = pp.Opt(
+    pp.Suppress(pp.Literal("["))
+    + pp.DelimitedList(pp.common.integer)
+    + pp.Suppress(pp.Literal("]"))
+)
+
+binary_value = pp.Suppress(pp.Literal("2#")) + pp.Regex(r"[_01]+")
+binary_value.add_parse_action(lambda toks: int(toks[0], 2))
+octal_value = pp.Suppress(pp.Literal("8#")) + pp.Regex(r"[_0-7]+")
+octal_value.add_parse_action(lambda toks: int(toks[0], 8))
+decimal_value = pp.common.signed_integer
+hex_value = pp.Suppress(pp.Literal("16#")) + pp.common.hex_integer
+ascii_value = pp.QuotedString("'")
+exp_value = pp.common.sci_real
+float_value = pp.common.real
+
+data_value = pp.Or([
+    binary_value,
+    octal_value,
+    decimal_value,
+    hex_value,
+    ascii_value,
+    exp_value,
+    float_value,
+])
+
+# Recursive expression to capture the complete value of a tag. These may
+# be a single value, or a list of, possibly nested, values.
+tag_value = pp.Forward()
+value_list = pp.Group(
+    pp.Suppress(pp.Literal("["))
+    + pp.DelimitedList(tag_value)
+    + pp.Suppress(pp.Literal("]"))
+)
+tag_value <<= data_value | value_list
+
+# Statement defining a regular(nonbit) UDT member.
+struct_member = pp.Group(
+    data_type_name
+    + pp.common.identifier
+    + array_dim
+    + attribute_list
+    + terminator
+)
+
+# Statement defining a single-bit UDT member.
+bit_member = (
+    pp.Suppress(pp.Keyword("BIT"))
+    + pp.common.identifier
+    + pp.common.identifier
+    + pp.Suppress(pp.Literal(":"))
+    + pp.common.integer
+    + attribute_list
+    + terminator
+)
+
+# Statement define a single UDT member of any type.
+data_type_member = struct_member | bit_member
+
+# Data type defintion component.
+DATATYPE = component(
+    "DATATYPE",
+    pp.common.identifier
+    + attribute_list
+    + pp.OneOrMore(data_type_member)
+)
+
+# Connection definition component.
+CONNECTION = component(
+    "CONNECTION",
+    pp.common.identifier
+    + attribute_list
+    + prop_list
+)
+
+module_ext_prop = pp.Opt(
+    pp.Suppress(pp.Literal("ExtendedProp"))
+    + assign
+    + pp.QuotedString("[[[___", end_quote_char="___]]]")
+)
+
+# Module definition component.
+MODULE = component(
+    "MODULE",
+    module_name
+    + attribute_list
+
+    # Extended properties come before other properties, such as ConfigData,
+    # even though the reference documentation shows extended properties
+    # coming after.
+    + module_ext_prop
+
+    + prop_list
+    + pp.ZeroOrMore(CONNECTION)
+)
+
+# A single ladder logic rung.
+rung = (
+    # Rung comment is a list of strings, one per line.
+    pp.Opt(
+        pp.Suppress(pp.Keyword("RC:"))
+        + pp.OneOrMore(pp.QuotedString('"'))
+        + terminator
+    )
+
+    # Rung logic.
+    + pp.Suppress(pp.Keyword("N:"))
+    + pp.Regex(r"[^;]+").leave_whitespace()
+    + terminator
+)
+
+# Ladder logic routine
+ROUTINE = component(
+    "ROUTINE",
+    pp.common.identifier
+    + attribute_list
+    + pp.ZeroOrMore(rung)
+)
+
+# Single line of structured text
+st_line = pp.Suppress(pp.Literal("'")) + pp.rest_of_line
+
+# Structured text routine
+ST_ROUTINE = component(
+    "ST_ROUTINE",
+    pp.common.identifier
+    + attribute_list
+    + pp.ZeroOrMore(st_line)
+)
+
+# Routine of any logic type.
+routine = ROUTINE | ST_ROUTINE
+
+# Statement definining a single AOI parameter.
+parameter = (
+    pp.common.identifier
+    + pp.Suppress(pp.Literal(":"))
+    + data_type_name
+    + array_dim
+    + attribute_list
+    + terminator
+)
+
+# AOI parameter definition component
+PARAMETERS = component(
+    "PARAMETERS",
+    pp.ZeroOrMore(parameter)
+)
+
+# Statement defining a single AOI local tag.
+local_tag = (
+    pp.common.identifier
+    + pp.Suppress(pp.Literal(":"))
+    + pp.common.identifier
+    + array_dim
+    + attribute_list
+    + terminator
+)
+
+# AOI local tag definition component.
+LOCAL_TAGS = component(
+    "LOCAL_TAGS",
+
+    # Permit an empty component even though the reference documentation
+    # doesn't really show tag declarations are optional.
+    pp.ZeroOrMore(local_tag)
+)
+
+# AOI definition block.
+ADD_ON_INSTRUCTION = component(
+    "ADD_ON_INSTRUCTION_DEFINITION",
+    pp.common.identifier
+    + attribute_list
+    + pp.Opt(PARAMETERS)
+    + pp.Opt(LOCAL_TAGS)
+    + pp.ZeroOrMore(routine)
+)
+
+tag_force_data = pp.Opt(
+    pp.Suppress(pp.Literal(","))
+    + pp.Suppress(pp.Keyword("TagForceData"))
+    + assign
+    + tag_value
+)
+
+# Statement defining a tag type not defined by a more specific expression.
+default_tag = (
+    pp.common.identifier
+    + pp.Suppress(pp.Literal(":"))
+    + pp.common.identifier
+    + array_dim
+    + attribute_list
+
+    # Value is absent for certain types, such as MESSAGE and motion tags.
+    + pp.Opt(assign + tag_value)
+
+    + tag_force_data
+    + terminator
+)
+
+# Statement defining an alias tag.
+alias_tag = (
+    pp.common.identifier
+    + pp.Suppress(pp.Keyword("OF"))
+    + pp.Word(pp.printables)
+    + attribute_list
+    + terminator
+)
+
+tag_definition = default_tag | alias_tag
+
+# Component declaring a set of tags.
+TAG = component(
+    "TAG",
+    pp.ZeroOrMore(tag_definition)
+)
+
+# Component declaring a program.
+PROGRAM = component(
+    "PROGRAM",
+    pp.common.identifier
+    + attribute_list
+    + pp.Opt(TAG)
+    + pp.ZeroOrMore(routine)
+)
+
+# Task definition component.
+TASK = component(
+    "TASK",
+    pp.common.identifier
+    + attribute_list
+    + pp.ZeroOrMore(pp.common.identifier + terminator)
+)
+
+# Parameter connection definition component.
+PARAMETER_CONNECTION = component(
+    "PARAMETER_CONNECTION",
+    attribute_list
+)
+
+# Trend pen definition component.
+PEN = component(
+    "PEN",
+
+    # Pen names may include path(\) and structure(.) members separators in
+    # addition to the usual identifier characters.
+    pp.Word(pp.alphanums + r"\_.")
+
+    + attribute_list
+)
+
+# Trend definition component.
+TREND = component(
+    "TREND",
+    pp.common.identifier
+    + attribute_list
+
+    # Template data. Reference documentation indicates this is always
+    # present, however, it is actually optional.
+    + prop_list
+
+    + pp.ZeroOrMore(PEN)
+)
+
+# Statement defining a single quick watch tag.
+WATCH_TAG = (
+    pp.Suppress(pp.Keyword("WATCH_TAG"))
+    + attribute_list
+    + terminator
+)
+
+# Watchlist definition component.
+QUICK_WATCH = component(
+    "QUICK_WATCH",
+    attribute_list
+
+    # Reference documentation indicates there will always be at least one
+    # tag, however, it is possible to have an empty quick watch.
+    + pp.ZeroOrMore(WATCH_TAG)
+)
+
+# Controller configuration component.
+CONFIG = component(
+    "CONFIG",
+    pp.common.identifier
+    + attribute_list
+)
+
+# Controller definition component.
+CONTROLLER = component(
+    "CONTROLLER",
+    pp.common.identifier
+    + attribute_list
+    + pp.ZeroOrMore(DATATYPE)
+    + pp.ZeroOrMore(MODULE)
+    + pp.ZeroOrMore(ADD_ON_INSTRUCTION)
+    + TAG
+    + pp.ZeroOrMore(PROGRAM)
+    + pp.ZeroOrMore(TASK)
+    + pp.ZeroOrMore(PARAMETER_CONNECTION)
+    + pp.ZeroOrMore(TREND)
+    + pp.ZeroOrMore(QUICK_WATCH)
+    + pp.ZeroOrMore(CONFIG)
+)
+
+# Top-level expression for the entire L5K export.
+prj = header + version + CONTROLLER
