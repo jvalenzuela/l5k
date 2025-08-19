@@ -199,20 +199,23 @@ MODULE = component(
     + pp.ZeroOrMore(CONNECTION)
 )
 
-# A single ladder logic rung.
-rung = (
-    # Rung comment is a list of strings, one per line.
-    pp.Opt(
-        pp.Suppress(pp.Keyword("RC:"))
-        + pp.OneOrMore(pp.QuotedString('"'))
-        + terminator
-    )
+# Comment applied to a single ladder logic rung.
+rung_comment = (
+    pp.Suppress(pp.Keyword("RC:"))
+    + pp.OneOrMore(pp.QuotedString('"'))
+    + terminator
+)
 
-    # Rung logic.
-    + pp.Suppress(pp.Keyword("N:"))
+# Neutral text instructions in a single ladder logic rung.
+rung_logic = (
+    pp.Word(pp.alphas)
+    + pp.Literal(":")
     + pp.Regex(r"[^;]+").leave_whitespace()
     + terminator
 )
+
+# Complete definition of a single ladder logic rung.
+rung = pp.Opt(rung_comment) + rung_logic
 
 # Ladder logic routine
 ROUTINE = component(
