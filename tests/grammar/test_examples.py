@@ -20,8 +20,7 @@ class Controller(unittest.TestCase):
         """
         l5k.grammar.CONTROLLER.parse_string(
             r"""
-            CONTROLLER example_controller (Description := "controller
-            description",
+            CONTROLLER example_controller (Description := "controller description",
             ProcessorType := "1756-L73",
             Major := 22,
             TimeSlice := 20,
@@ -458,18 +457,13 @@ class AddOnInstruction(unittest.TestCase):
             END_PARAMETERS
             LOCAL_TAGS
             Valve_Type : DISCRETE_2STATE (Description := "The valve is a 2 state valve",
-            DefaultData := "[49,0.00000000e+000,0,0,0.00000000e+000,0.00000000e+000,
-            0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000]");
+            DefaultData := "[49,0.00000000e+000,0,0,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000]");
             END_LOCAL_TAGS
-            FBD_ROUTINE Logic (Description := "This UDI Logic routine is nonsense but shows the
-            format sufficiently. In fact, it does not even use the InOut Parameter",
+            FBD_ROUTINE Logic (Description := "This UDI Logic routine is nonsense but shows the format sufficiently. In fact, it does not even use the InOut Parameter",
             SheetSize := "Letter (8.5x11in)", SheetOrientation := Landscape)
             SHEET (Name := "")
             D2SD_BLOCK (ID := 0, X := 200, Y := 160, Operand := Valve_Type,
-            VisiblePins := "ProgCommand, State0Perm, State1Perm, FB0, FB1,
-            HandFB, ProgProgReq, ProgOperReq, ProgOverrideReq, ProgHandReq,
-            Out, Device0State, Device1State, CommandStatus, FaultAlarm,
-            ModeAlarm, ProgOper, Override, Hand")
+            VisiblePins := "ProgCommand, State0Perm, State1Perm, FB0, FB1, HandFB, ProgProgReq, ProgOperReq, ProgOverrideReq, ProgHandReq, Out, Device0State, Device1State, CommandStatus, FaultAlarm, ModeAlarm, ProgOper, Override, Hand")
             END_D2SD_BLOCK
             IREF (ID := 1, X := 120, Y := 100, Operand := Valve_Command)
             END_IREF
@@ -509,8 +503,7 @@ class AddOnInstruction(unittest.TestCase):
             := "apollo\drjones",
             EditedDate := "2009-02-25T15:05:52.042Z", EditedBy :=
             "apollo\drjones",
-            AdditionalHelpText := "My first HI Safety Add-On
-            Instruction")
+            AdditionalHelpText := "My first HI Safety Add-On Instruction")
             HISTORY_ENTRY (User := "apollo\drjones",
             Timestamp := "2009-01-05T15:24:59.188Z", SignatureID
             := 68F42D31,
@@ -795,8 +788,7 @@ class Program(unittest.TestCase):
             END_TAG
 
             ROUTINE MainRoutine
-            RC: "Get the Controllers real time clock broken down
-            by Year, month, day...microseconds and store in a tag so that the values can be used.";
+            RC: "Get the Controllers real time clock broken down by Year, month, day...microseconds and store in a tag so that the values can be used.";
             N: XIC(Test_CurrentDate)GSV
             (WALLCLOCKTIME,,DateTime,TestDateTime.Year);
             END_ROUTINE
@@ -1506,10 +1498,8 @@ class SafetySignatures(unittest.TestCase):
         """Ref p329."""
         l5k.grammar.CONTROLLER.parse_string(
             r"""
-            CONTROLLER safety_v36 (SafetySignature := "B3CC8FA3 - 65D512A2 - 25A1A8A7 - A4B46668 - 6F7F560A -
-            721374FD - B2ED3906 - 36CBACCC, 02/23/2023, 02:41:57.402 PM",
-            SafetyRootSignature := "B3CC8FA3 - 65D512A2 - 25A1A8A7 - A4B46668 - 6F7F560A -
-721374FD - B2ED3906 - 36CBACCC",
+            CONTROLLER safety_v36 (SafetySignature := "B3CC8FA3 - 65D512A2 - 25A1A8A7 - A4B46668 - 6F7F560A - 721374FD - B2ED3906 - 36CBACCC, 02/23/2023, 02:41:57.402 PM",
+            SafetyRootSignature := "B3CC8FA3 - 65D512A2 - 25A1A8A7 - A4B46668 - 6F7F560A - 721374FD - B2ED3906 - 36CBACCC",
             SafetyRootSignatureTimestamp := "02/09/2023, 01:45:38.445 PM")
             END_CONTROLLER
             """
@@ -1519,16 +1509,12 @@ class SafetySignatures(unittest.TestCase):
         """Ref p330."""
         l5k.grammar.CONTROLLER.parse_string(
             r"""
-            CONTROLLER safety_v36 (SafetyTagMap := " ctrlTagStandard=ctrlTagSafety,
-            ctrlTagStandard2=ctrlTagSafety2",
-            SafetyTagMapSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C
-            - 63C58FAA - 6717B619 - 686CC114",
+            CONTROLLER safety_v36 (SafetyTagMap := " ctrlTagStandard=ctrlTagSafety, ctrlTagStandard2=ctrlTagSafety2",
+            SafetyTagMapSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
             SafetyTagMapSignatureTimestamp := "02/09/2023, 01:45:38.445 PM",
-            ControllerAttributesSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 -
-            1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
+            ControllerAttributesSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
             ControllerAttributesSignatureTimestamp := "02/09/2023, 01:45:38.445 PM",
-            ApplicationRollupSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 -
-            1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
+            ApplicationRollupSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
             ApplicationRollupSignatureTimestamp := "02/09/2023, 01:45:38.445 PM")
             END_CONTROLLER
             """
@@ -1538,8 +1524,7 @@ class SafetySignatures(unittest.TestCase):
         """Ref p331."""
         l5k.grammar.CONTROLLER.parse_string(
             r"""
-            CONTROLLER safety_v36 (TagsRollupSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C -
-            63C58FAA - 6717B619 - 686CC114",
+            CONTROLLER safety_v36 (TagsRollupSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
             TagsRollupSignatureTimestamp := "02/09/2023, 01:45:38.445 PM")
             END_CONTROLLER
             """
@@ -1550,25 +1535,21 @@ class SafetySignatures(unittest.TestCase):
         l5k.grammar.CONTROLLER.parse_string(
             r"""
             PROGRAM SafetyProgram (Class := Safety,
-            ProgramSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C
-            - 63C58FAA - 6717B619 - 686CC114",
+            ProgramSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
             ProgramSignatureTimestamp := "02/09/2023, 01:45:38.445 PM",
-            TagsSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C -
-            63C58FAA - 6717B619 - 686CC114",
+            TagsSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
             TagsSignatureTimestamp := "02/09/2023, 01:45:38.445 PM")
             TAG
             localTagSafety : DINT (RADIX := Decimal) := 0;
             END_TAG
-            ROUTINE MainRoutine (RoutineSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 -
-            1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
+            ROUTINE MainRoutine (RoutineSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
             RoutineSignatureTimestamp := "02/09/2023, 01:45:38.445 PM")
             END_ROUTINE
             CHILD_PROGRAMS
             END_CHILD_PROGRAMS
             END_PROGRAM
             TASK SafetyTask (Class := Safety,
-            TaskSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C -
-            63C58FAA - 6717B619 - 686CC114",
+            TaskSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
             TaskSignatureTimestamp := "02/09/2023, 01:45:38.445 PM")
             END_TASK
             """
@@ -1578,15 +1559,12 @@ class SafetySignatures(unittest.TestCase):
         """Ref p334."""
         l5k.grammar.CONTROLLER.parse_string(
             r"""
-            CONTROLLER safety_v36 (AoisRollupSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C -
-            63C58FAA - 6717B619 - 686CC114",
+            CONTROLLER safety_v36 (AoisRollupSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
             AoisRollupSignatureTimestamp := "02/09/2023, 01:45:38.445 PM")
             ADD_ON_INSTRUCTION_DEFINITION SafetyAOI (Class := Safety,
-            AoiSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 -
-            31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
+            AoiSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
             AoiSignatureTimestamp := "02/09/2023, 01:45:38.445 PM",
-            AoiParametersAndLocalTagsRollupSignature := "F5AFC204 -
-            9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
+            AoiParametersAndLocalTagsRollupSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
             AoiParametersAndLocalTagsRollupSignatureTimestamp :=
             "02/09/2023, 01:45:38.445 PM")
             PARAMETERS
@@ -1602,8 +1580,7 @@ class SafetySignatures(unittest.TestCase):
             ExternalAccess := None,
             DefaultData := 0);
             END_LOCAL_TAGS
-            ROUTINE Logic (RoutineSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C -
-            63C58FAA - 6717B619 - 686CC114",
+            ROUTINE Logic (RoutineSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
             RoutineSignatureTimestamp := "02/09/2023, 01:45:38.445 PM")
             N: XIC(ParamForAOI)OTL(ParamForAOI);
             N: XIC(LocalTagAOI)OTU(LocalTagAOI);
@@ -1612,8 +1589,7 @@ class SafetySignatures(unittest.TestCase):
             ENCODED_DATA (EncodedType := ADD_ON_INSTRUCTION_DEFINITION,
             Name := "EncodedSafetyAOI",
             Class := Safety,
-            AoiSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA -
-            6717B619 - 686CC114",
+            AoiSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
             AoiSignatureTimestamp := "02/09/2023, 01:45:38.445 PM")
             PARAMETERS
             EnableIn : BOOL (Description := "Enable Input - System Defined Parameter",
@@ -1633,17 +1609,13 @@ class SafetySignatures(unittest.TestCase):
         """Ref p336."""
         l5k.grammar.CONTROLLER.parse_string(
             r"""
-            CONTROLLER safety_v36 (ModulesRollupSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 -
-            1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
+            CONTROLLER safety_v36 (ModulesRollupSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
             ModulesRollupSignatureTimestamp := "02/09/2023, 01:45:38.445 PM")
-            MODULE safetyIO (ModuleSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C -
-            63C58FAA - 6717B619 - 686CC114",
+            MODULE safetyIO (ModuleSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
             ModuleSignatureTimestamp := "02/09/2023, 01:45:38.445 PM"
-            ConnectionsRollupSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 -
-            1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
+            ConnectionsRollupSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
             ConnectionsRollupSignatureTimestamp := "02/09/2023, 01:45:38.445 PM")
-            CONNECTION SafetyInput (ConnectionSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107
-            - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
+            CONNECTION SafetyInput (ConnectionSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
             ConnectionSignatureTimestamp := "02/09/2023, 01:45:38.445 PM")
             END_CONNECTION
             END_MODULE
