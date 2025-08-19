@@ -764,12 +764,12 @@ class Program(unittest.TestCase):
         l5k.grammar.ROUTINE.parse_string(
             r"""
             ENCODED_DATA (EncodedType := ROUTINE,
-            Name: Processcontro1",
-            Description = "description on routine",
-            Type = SFC,
+            Name := "Processcontro1",
+            Description := "description on routine",
+            Type := SFC,
             EncryptionConfig := 2)
 
-            17r8GxtsZCMLfk3JHFYmU7emZMNhRh90EUUPQb5IKS676d/XRznQ+56vf8IVQNNEIDODL1U+UEC301MDetvnJAX2CdwNPRNC1N3CjPApchCL95hdF1y2x3/T47RDSI1299b1XN5v5XUQTGlevktB6dspatujrGLLTf4mOEdFVHMD9qQTNep+e/M9V9Cx51z2s4xc3R1130F9KKobr7j1RdDmAuyRRZLYKTE01ZDpZAS9A1cebPoYuhм1gCF1AUK9еYBkzm/VI5gpH400Vuci/xdt0/9/xPPXKizjoDI2ZOPFdkz74VoGrL43WKONOX2WPC/u4RCCDehNMXBdsYffba1uIvy9FDrJwxod/K8wrIn6BWOkLeBy1VGXCUCxa8oyersEhBLZ6nгTYd/wybHvNmpOTLgpI1bhzwyTvttwf4Zw8qBN6Yu762cuwba/btkCQ40uic6мit6vMt/TFUR4503Hw/dwGPKUaXDBNBbbBVDB11FnCORX/Mtm+HAуqF5vtt6LwKwozaEVI76sojhC8mNJOLUBdPtZoLafqSF20Mbwedr9Cw6w
+17r8GxtsZCMLfk3JHFYmU7emZMNhRh90EUUPQb5IKS676d/XRznQ+56vf8IVQNNEIDODL1U+UEC301MDetvnJAX2CdwNPRNC1N3CjPApchCL95hdF1y2x3/T47RDSI1299b1XN5v5XUQTGlevktB6dspatujrGLLTf4mOEdFVHMD9qQTNep+e/M9V9Cx51z2s4xc3R1130F9KKobr7j1RdDmAuyRRZLYKTE01ZDpZAS9A1cebPoYuhM1gCF1AUK9eYBkzm/VI5gpH400Vuci/xdt0/9/xPPXKizjoDI2ZOPFdkz74VoGrL43WKONOX2WPC/u4RCCDehNMXBdsYffba1uIvy9FDrJwxod/K8wrIn6BWOkLeBy1VGXCUCxa8oyersEhBLZ6nTYd/wybHvNmpOTLgpI1bhzwyTvttwf4Zw8qBN6Yu762cuwba/btkCQ40uic6Mit6vMt/TFUR4503Hw/dwGPKUaXDBNBbbBVDB11FnCORX/vtt6LwKwozaEVI76sojhC8mNJOLUBdPtZoLafqSF20Mbwedr9Cw6w
             END_ENCODED_DATA
             """
         )
