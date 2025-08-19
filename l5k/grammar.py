@@ -239,6 +239,12 @@ ST_ROUTINE = component(
 # Routine of any logic type.
 routine = ROUTINE | ST_ROUTINE
 
+# AOI signature history.
+HISTORY_ENTRY = component(
+    "HISTORY_ENTRY",
+    attribute_list
+)
+
 # Statement definining a single AOI parameter.
 parameter = (
     pp.common.identifier
@@ -279,6 +285,7 @@ ADD_ON_INSTRUCTION = component(
     "ADD_ON_INSTRUCTION_DEFINITION",
     pp.common.identifier
     + attribute_list
+    + pp.ZeroOrMore(HISTORY_ENTRY)
     + pp.Opt(PARAMETERS)
     + pp.Opt(LOCAL_TAGS)
     + pp.ZeroOrMore(routine)
