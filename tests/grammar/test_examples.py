@@ -433,30 +433,33 @@ class AddOnInstruction(unittest.TestCase):
         )
 
     def test_unencoded_standard(self):
-        """Ref p113."""
+        """Ref p113.
+
+        Slanted quotation marks replaced with straight quotes.
+        """
         l5k.grammar.ADD_ON_INSTRUCTION.parse_string(
             r"""
             ADD_ON_INSTRUCTION_DEFINITION Valve (Description := "Simple valve control",
-            Revision := “1.0”, RevisionExtension := “B”,
-            Vendor := “RaesUDICreationsUnlimited”, ExecutePrescan := Yes,
+            Revision := "1.0", RevisionExtension := "B",
+            Vendor := "RaesUDICreationsUnlimited", ExecutePrescan := Yes,
             ExecutePostscan := No, ExecuteEnableInFalse := No,
-            CreatedBy := “apollo\drjones”, EditedDate := “2005-01-05T15:24:59.188Z”,
-            EditedBy := “apollo\drjones”,
-            AdditionalHelpText := “My first Add-On Instruction – how cool!”)
+            CreatedBy := "apollo\drjones", EditedDate := "2005-01-05T15:24:59.188Z",
+            EditedBy := "apollo\drjones",
+            AdditionalHelpText := "My first Add-On Instruction – how cool!")
             PARAMETERS
-            Valve_Command : BOOL (Description := “0 - Close valve$N1 - Open valve”,
-            Radix := Decimal, Required := Yes, Visible := Yes, DefaultData := “1”);
+            Valve_Command : BOOL (Description := "0 - Close valve$N1 - Open valve",
+            Radix := Decimal, Required := Yes, Visible := Yes, DefaultData := "1");
             Array_Parameter : REAL[5] (Type := InOut, Radix := Float, Required := Yes,
             Visible := Yes); Valve_Out : DINT (Type := Output, Radix := Decimal,
-            Required := No, Visible := Yes, DefaultData := “0”);
-            Reset : BOOL (Description := “Used by Prescan routine to run Reset code”,
+            Required := No, Visible := Yes, DefaultData := "0");
+            Reset : BOOL (Description := "Used by Prescan routine to run Reset code",
             Type := Input, Radix := Decimal, Required := No, Visible := No,
-            DefaultData := “1”);
+            DefaultData := "1");
             END_PARAMETERS
             LOCAL_TAGS
-            Valve_Type : DISCRETE_2STATE (Description := “The valve is a 2 state valve”,
-            DefaultData := “[49,0.00000000e+000,0,0,0.00000000e+000,0.00000000e+000,
-            0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000]”);
+            Valve_Type : DISCRETE_2STATE (Description := "The valve is a 2 state valve",
+            DefaultData := "[49,0.00000000e+000,0,0,0.00000000e+000,0.00000000e+000,
+            0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000]");
             END_LOCAL_TAGS
             FBD_ROUTINE Logic (Description := "This UDI Logic routine is nonsense but shows the
             format sufficiently. In fact, it does not even use the InOut Parameter",
@@ -490,36 +493,38 @@ class AddOnInstruction(unittest.TestCase):
 
         Brevity deletion comment removed & END_HISTORY_ENTRY spacing
         corrected.
+
+        Slanted quotation marks replaced with straight quotes.
         """
         l5k.grammar.ADD_ON_INSTRUCTION.parse_string(
             r"""
             ADD_ON_INSTRUCTION_DEFINITION HI_SafetyAOI (Description
             := "sealed safety AOI",
-            Revision := “1.0”, RevisionExtension := “B”,
-            RevisionNote := “Original release to library”,
-            Vendor := “AOICreationsUnlimited”, Class := Safety,
+            Revision := "1.0", RevisionExtension := "B",
+            RevisionNote := "Original release to library",
+            Vendor := "AOICreationsUnlimited", Class := Safety,
             ExecutePrescan := Yes,
             ExecutePostscan := No, ExecuteEnableInFalse := No,
-            CreatedDate := “2009-01-05T15:24:59.188Z”, CreatedBy
-            := “apollo\drjones”,
-            EditedDate := “2009-02-25T15:05:52.042Z”, EditedBy :=
-            “apollo\drjones”,
-            AdditionalHelpText := “My first HI Safety Add-On
-            Instruction”)
-            HISTORY_ENTRY (User := “apollo\drjones”,
-            Timestamp := “2009-01-05T15:24:59.188Z”, SignatureID
+            CreatedDate := "2009-01-05T15:24:59.188Z", CreatedBy
+            := "apollo\drjones",
+            EditedDate := "2009-02-25T15:05:52.042Z", EditedBy :=
+            "apollo\drjones",
+            AdditionalHelpText := "My first HI Safety Add-On
+            Instruction")
+            HISTORY_ENTRY (User := "apollo\drjones",
+            Timestamp := "2009-01-05T15:24:59.188Z", SignatureID
             := 68F42D31,
-            Description := “My First History Entry!”)
+            Description := "My First History Entry!")
             END_HISTORY_ENTRY
-            HISTORY_ENTRY (User := “apollo\drjones”,
-            Timestamp := “2009-02-03T10:24:19.760Z”, SignatureID
+            HISTORY_ENTRY (User := "apollo\drjones",
+            Timestamp := "2009-02-03T10:24:19.760Z", SignatureID
             := C7013D42,
-            Description := “My Second History Entry!”)
+            Description := "My Second History Entry!")
             END_HISTORY_ENTRY
-            HISTORY_ENTRY (User := “apollo\drjones”,
-            Timestamp := “2009-02-25T15:05:52.042Z”, SignatureID
+            HISTORY_ENTRY (User := "apollo\drjones",
+            Timestamp := "2009-02-25T15:05:52.042Z", SignatureID
             := F4E691A2,
-            Description := “My Last History Entry!”)
+            Description := "My Last History Entry!")
             END_HISTORY_ENTRY
             END_ADD_ON_INSTRUCTION_DEFINITION
             """
@@ -609,7 +614,7 @@ class Tag(unittest.TestCase):
             LLSeverity := 500, MinDurationPRE := 0, Deadband := 0.0, ROCPosLimit := 0.0,
             ROCPosSeverity := 500, ROCNegLimit := 0.0, ROCNegSeverity := 500, ROCPeriod := 0.0,
             AssocTagl := "PlantNumber", AssocTag2 := "ShiftNumber", AssocTag3 := "BatchNumber",
-            AssocTag4 := "LotNumber", AlarmClass := "tank2", HMICmd := "ft command”);
+            AssocTag4 := "LotNumber", AlarmClass := "tank2", HMICmd := "ft command");
 
             my_alarm : ALARM DIGITAL (ALMMSG.AM:en-us := "my message",
             Severity := 500, MinDurationPRE := 0, ProgTime := DT#1970-01-01-00:00:00.000000Z,
@@ -619,7 +624,7 @@ class Tag(unittest.TestCase):
             ProgUnsuppress := false, OperUnsuppress := false, ProgDisable := false,
             OperDisable := false, ProgEnable := false, OperEnable := false,
             AlarmCountReset := false, AssocTagl := "BatchNumber", AssocTag2 := "LotNumber",
-            AssocTag3 := "PlantNumber", AssocTag4 := "ShiftNumber", AlarmClass := “tank1",
+            AssocTag3 := "PlantNumber", AssocTag4 := "ShiftNumber", AlarmClass := "tank1",
             HMICmd := "ft command");
             """
         )
