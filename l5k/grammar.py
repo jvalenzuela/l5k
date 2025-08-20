@@ -229,6 +229,41 @@ ROUTINE = component(
     + pp.ZeroOrMore(rung)
 )
 
+# Single line of structured text
+st_line = pp.Suppress(pp.Literal("'")) + pp.rest_of_line
+
+PRESET = component("PRESET", attribute_list + pp.ZeroOrMore(st_line))
+LIMITHIGH = component("LIMITHIGH", attribute_list + pp.ZeroOrMore(st_line))
+LIMITLOW = component("LIMITLOW", attribute_list + pp.ZeroOrMore(st_line))
+BODY = component("BODY", attribute_list + pp.ZeroOrMore(st_line))
+
+ACTION = component(
+    "ACTION",
+    attribute_list
+
+    # Reference documentation shows the PRESET and BODY declarations as
+    # required, although they're actually optional.
+    + pp.Opt(PRESET)
+    + pp.Opt(BODY)
+)
+
+STEP = component(
+    "STEP",
+    attribute_list
+    + pp.Opt(PRESET)
+    + pp.Opt(LIMITHIGH)
+    + pp.Opt(LIMITLOW)
+    + pp.ZeroOrMore(ACTION)
+)
+
+CONDITION = component("CONDITION", attribute_list + pp.ZeroOrMore(st_line))
+TRANSITION = component("TRANSITION", attribute_list + CONDITION)
+SBR_RET = component("SBR_RET", attribute_list)
+STOP = component("STOP", attribute_list)
+LEG = component("LEG", attribute_list)
+BRANCH = component("BRANCH", attribute_list + pp.OneOrMore(LEG))
+DIRECTED_LINK = component("DIRECTED_LINK", attribute_list)
+
 # Function block diagram sheet components.
 IREF = component("IREF", attribute_list)
 OREF = component("OREF", attribute_list)
@@ -241,6 +276,18 @@ WIRE = component("WIRE", attribute_list)
 FEEDBACK_WIRE = component("FEEDBACK_WIRE", attribute_list)
 TEXT_BOX = component("TEXT_BOX", attribute_list)
 ATTACHMENT = component( "ATTACHMENT", attribute_list)
+
+# A single sequential function chart element.
+sfc_element = pp.Or([
+    STEP,
+    TRANSITION,
+    BRANCH,
+    SBR_RET,
+    STOP,
+    DIRECTED_LINK,
+    TEXT_BOX,
+    ATTACHMENT,
+])
 
 # A block and function components include the mnemonic in the starting and
 # ending keywords, e.g., ADD_FUNCTION/END_ADD_FUNCTION.
@@ -290,7 +337,10 @@ SHEET = component(
 LOGIC = component(
     "LOGIC",
     attribute_list
-    + pp.ZeroOrMore(SHEET)
+
+    # This component can contain various logic types.
+    + pp.ZeroOrMore(SHEET)  # Function block diagram
+    + pp.ZeroOrMore(sfc_element)  # Sequential function chart
 )
 
 # Function block diagram routine
@@ -301,9 +351,6 @@ FBD_ROUTINE = component(
     + pp.ZeroOrMore(pp.Or([SHEET, LOGIC]))
 )
 
-# Single line of structured text
-st_line = pp.Suppress(pp.Literal("'")) + pp.rest_of_line
-
 # Structured text routine
 ST_ROUTINE = component(
     "ST_ROUTINE",
@@ -312,11 +359,20 @@ ST_ROUTINE = component(
     + pp.ZeroOrMore(st_line)
 )
 
+# Sequential function chart routine
+SFC_ROUTINE = component(
+    "SFC_ROUTINE",
+    pp.common.identifier
+    + attribute_list
+    + pp.ZeroOrMore(pp.Or([sfc_element, LOGIC]))
+)
+
 # Routine of any logic type.
 routine = pp.Or([
     ROUTINE,
     ST_ROUTINE,
     FBD_ROUTINE,
+    SFC_ROUTINE,
 ])
 
 # AOI signature history.
