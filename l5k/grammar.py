@@ -341,6 +341,7 @@ LOGIC = component(
     # This component can contain various logic types.
     + pp.ZeroOrMore(SHEET)  # Function block diagram
     + pp.ZeroOrMore(sfc_element)  # Sequential function chart
+    + pp.ZeroOrMore(st_line)  # Structured text
 )
 
 # Function block diagram routine
@@ -356,7 +357,7 @@ ST_ROUTINE = component(
     "ST_ROUTINE",
     pp.common.identifier
     + attribute_list
-    + pp.ZeroOrMore(st_line)
+    + pp.ZeroOrMore(pp.Or([st_line, LOGIC]))
 )
 
 # Sequential function chart routine
