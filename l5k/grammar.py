@@ -8,6 +8,10 @@ invalid content. This is in the interest of simplicity as strict
 expressions will invariably be more complicated; the intent of this
 module is to extract information from well-formed sources, i.e., files
 created by Logix5000.
+
+The reference document used to define this grammer is Logix 5000
+Controllers Import/Export Reference Manual, Rockwell Automation Publication
+1756-RM014C-EN-P - September 2024.
 """
 
 import pyparsing as pp
