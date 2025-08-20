@@ -947,7 +947,7 @@ class FunctionBlockDiagram(unittest.TestCase):
             Operand := MUL_01,
             VisiblePins := "SourceA, SourceB, Dest")
             END_MUL_BLOCK
-            SCL_BLOCK (ID := 1
+            SCL_BLOCK (ID := 1,
             X := 240,
             Y := 60,
             Operand := SCL_01,
