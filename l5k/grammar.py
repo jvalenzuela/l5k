@@ -225,6 +225,78 @@ ROUTINE = component(
     + pp.ZeroOrMore(rung)
 )
 
+# Function block diagram sheet components.
+IREF = component("IREF", attribute_list)
+OREF = component("OREF", attribute_list)
+ICON = component("ICON", attribute_list)
+OCON = component("OCON", attribute_list)
+JSR = component("JSR", attribute_list)
+SBR = component("SBR", attribute_list)
+RET = component("RET", attribute_list)
+WIRE = component("WIRE", attribute_list)
+FEEDBACK_WIRE = component("FEEDBACK_WIRE", attribute_list)
+TEXT_BOX = component("TEXT_BOX", attribute_list)
+ATTACHMENT = component( "ATTACHMENT", attribute_list)
+
+# A block and function components include the mnemonic in the starting and
+# ending keywords, e.g., ADD_FUNCTION/END_ADD_FUNCTION.
+BLOCK = (
+    pp.Regex(r"\w+BLOCK")
+    + attribute_list
+    + pp.Regex(r"END\w+BLOCK")
+)
+FUNCTION = (
+    pp.Regex(r"\w+FUNCTION")
+    + attribute_list
+    + pp.Regex(r"END\w+FUNCTION")
+)
+
+# Function block AOI parameters.
+FBD_PARAMETERS = component("FBD_PARAMETERS", attribute_list)
+
+# Function block AOI reference, not an AOI definition.
+ADD_ON_INSTRUCTION = component(
+    "ADD_ON_INSTRUCTION",
+    pp.common.identifier
+    + attribute_list
+    + FBD_PARAMETERS
+)
+
+# Function block sheet.
+SHEET = component(
+    "SHEET",
+    attribute_list
+    + pp.ZeroOrMore(IREF)
+    + pp.ZeroOrMore(OREF)
+    + pp.ZeroOrMore(ICON)
+    + pp.ZeroOrMore(OCON)
+    + pp.ZeroOrMore(BLOCK)
+    + pp.ZeroOrMore(ADD_ON_INSTRUCTION)
+    + pp.ZeroOrMore(JSR)
+    + pp.ZeroOrMore(SBR)
+    + pp.ZeroOrMore(RET)
+    + pp.ZeroOrMore(WIRE)
+    + pp.ZeroOrMore(FEEDBACK_WIRE)
+    + pp.ZeroOrMore(FUNCTION)
+    + pp.ZeroOrMore(TEXT_BOX)
+    + pp.ZeroOrMore(ATTACHMENT)
+)
+
+# Component containing online edits.
+LOGIC = component(
+    "LOGIC",
+    attribute_list
+    + pp.ZeroOrMore(SHEET)
+)
+
+# Function block diagram routine
+FBD_ROUTINE = component(
+    "FBD_ROUTINE",
+    pp.common.identifier
+    + attribute_list
+    + pp.ZeroOrMore(pp.Or([SHEET, LOGIC]))
+)
+
 # Single line of structured text
 st_line = pp.Suppress(pp.Literal("'")) + pp.rest_of_line
 
@@ -237,7 +309,11 @@ ST_ROUTINE = component(
 )
 
 # Routine of any logic type.
-routine = ROUTINE | ST_ROUTINE
+routine = pp.Or([
+    ROUTINE,
+    ST_ROUTINE,
+    FBD_ROUTINE,
+])
 
 # AOI signature history.
 HISTORY_ENTRY = component(
@@ -281,7 +357,7 @@ LOCAL_TAGS = component(
 )
 
 # AOI definition block.
-ADD_ON_INSTRUCTION = component(
+ADD_ON_INSTRUCTION_DEFINITION = component(
     "ADD_ON_INSTRUCTION_DEFINITION",
     pp.common.identifier
     + attribute_list
@@ -408,7 +484,7 @@ CONTROLLER = component(
     + attribute_list
     + pp.ZeroOrMore(DATATYPE)
     + pp.ZeroOrMore(MODULE)
-    + pp.ZeroOrMore(ADD_ON_INSTRUCTION)
+    + pp.ZeroOrMore(ADD_ON_INSTRUCTION_DEFINITION)
     + TAG
     + pp.ZeroOrMore(PROGRAM)
     + pp.ZeroOrMore(TASK)
