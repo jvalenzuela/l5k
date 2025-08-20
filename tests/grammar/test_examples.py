@@ -1380,7 +1380,7 @@ class Trend(unittest.TestCase):
     def test_trend(self):
         """Ref p311.
 
-        Template data terminated correctly with closing bracket.
+        Template data terminated correctly.
         """
         l5k.grammar.TREND.parse_string(
             r"""
@@ -1394,7 +1394,7 @@ class Trend(unittest.TestCase):
             Template :=
             [208,207,17,224,161,177,26,225,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,62,0,3,0,254,255,9,0,6,0,0,0,0,0,0,0,
             0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,16,0,0,2,0,0,0,1,0,0,0,254,255,255,255,0,0,0,0,0,0,0,0,255,255,255,
-            255,255,255]
+            255,255,255];
             PEN Local:1:I.CHA_Status (Color := 16#00ff_0000,
             Visible := 1,
             Width := 1,
