@@ -1295,20 +1295,20 @@ class StructuredTextRoutine(unittest.TestCase):
     def test_routine(self):
         """Ref p274.
 
-        Routine name replaced, sample comment removed, and END statement
-        corrected.
+        Routine name replaced, sample comment removed, back ticks replaced
+        with single quotes, and END statement corrected.
         """
         l5k.grammar.ST_ROUTINE.parse_string(
             r"""
             ST_ROUTINE routine_name
 
-            ‘IF (myInteger = 12) THEN
-            ‘ myInteger := ((5 * myInputInteger1) + (7 * myInteger2)) - 71;
-            ‘ WHILE (myTmpVar >= 0) DO
-            ‘ myInteger := myInteger + 3;
-            ‘ myTmpVar := myTmpVar - 1;
-            ‘ END_WHILE;
-            ‘END_IF;
+            'IF (myInteger = 12) THEN
+            ' myInteger := ((5 * myInputInteger1) + (7 * myInteger2)) - 71;
+            ' WHILE (myTmpVar >= 0) DO
+            ' myInteger := myInteger + 3;
+            ' myTmpVar := myTmpVar - 1;
+            ' END_WHILE;
+            'END_IF;
             END_ST_ROUTINE
             """
         )
