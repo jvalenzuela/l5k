@@ -609,7 +609,7 @@ class Tag(unittest.TestCase):
             AssocTagl := "PlantNumber", AssocTag2 := "ShiftNumber", AssocTag3 := "BatchNumber",
             AssocTag4 := "LotNumber", AlarmClass := "tank2", HMICmd := "ft command");
 
-            my_alarm : ALARM DIGITAL (ALMMSG.AM:en-us := "my message",
+            my_alarm : ALARM_DIGITAL (ALMMSG.AM:en-us := "my message",
             Severity := 500, MinDurationPRE := 0, ProgTime := DT#1970-01-01-00:00:00.000000Z,
             EnableIn := false, In := false, InFault := false, Condition := true,
             AckRequired := true, Latched := false, ProgAck := false, OperAck := false,
