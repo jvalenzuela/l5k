@@ -373,14 +373,6 @@ SFC_ROUTINE = component(
     + pp.ZeroOrMore(pp.Or([sfc_element, LOGIC]))
 )
 
-# Routine of any logic type.
-routine = pp.Or([
-    ROUTINE,
-    ST_ROUTINE,
-    FBD_ROUTINE,
-    SFC_ROUTINE,
-])
-
 # AOI signature history.
 HISTORY_ENTRY = component(
     "HISTORY_ENTRY",
@@ -402,6 +394,27 @@ PARAMETERS = component(
     "PARAMETERS",
     pp.ZeroOrMore(parameter)
 )
+
+# An encoded routine or AOI.
+ENCODED_DATA = component(
+    "ENCODED_DATA",
+    attribute_list
+
+    # Components of encoded AOIs.
+    + pp.ZeroOrMore(HISTORY_ENTRY)
+    + pp.Opt(PARAMETERS)
+
+    + pp.Word(pp.printables)
+)
+
+# Routine of any logic type.
+routine = pp.Or([
+    ROUTINE,
+    ST_ROUTINE,
+    FBD_ROUTINE,
+    SFC_ROUTINE,
+    ENCODED_DATA
+])
 
 # Statement defining a single AOI local tag.
 local_tag = (
@@ -432,6 +445,9 @@ ADD_ON_INSTRUCTION_DEFINITION = component(
     + pp.Opt(LOCAL_TAGS)
     + pp.ZeroOrMore(routine)
 )
+
+# An actual AOI definition may be unencoded or encoded.
+aoi_definition = pp.Or([ADD_ON_INSTRUCTION_DEFINITION, ENCODED_DATA])
 
 tag_force_data = pp.Opt(
     pp.Suppress(pp.Literal(","))
@@ -553,7 +569,7 @@ CONTROLLER = component(
     + attribute_list
     + pp.ZeroOrMore(DATATYPE)
     + pp.ZeroOrMore(MODULE)
-    + pp.ZeroOrMore(ADD_ON_INSTRUCTION_DEFINITION)
+    + pp.ZeroOrMore(aoi_definition)
     + TAG
     + pp.ZeroOrMore(PROGRAM)
     + pp.ZeroOrMore(TASK)

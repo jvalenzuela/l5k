@@ -397,7 +397,7 @@ class AddOnInstruction(unittest.TestCase):
 
         Added missing comma in EnableIn attributes.
         """
-        l5k.grammar.ADD_ON_INSTRUCTION_DEFINITION.parse_string(
+        l5k.grammar.aoi_definition.parse_string(
             r"""
             ENCODED_DATA (EncodedType := ADD_ON_INSTRUCTION_DEFINITION,
             Name := "Conveyor_Control",
@@ -439,7 +439,7 @@ class AddOnInstruction(unittest.TestCase):
 
         Slanted quotation marks replaced with straight quotes.
         """
-        l5k.grammar.ADD_ON_INSTRUCTION_DEFINITION.parse_string(
+        l5k.grammar.aoi_definition.parse_string(
             r"""
             ADD_ON_INSTRUCTION_DEFINITION Valve (Description := "Simple valve control",
             Revision := "1.0", RevisionExtension := "B",
@@ -493,7 +493,7 @@ class AddOnInstruction(unittest.TestCase):
 
         Slanted quotation marks replaced with straight quotes.
         """
-        l5k.grammar.ADD_ON_INSTRUCTION_DEFINITION.parse_string(
+        l5k.grammar.aoi_definition.parse_string(
             r"""
             ADD_ON_INSTRUCTION_DEFINITION HI_SafetyAOI (Description
             := "sealed safety AOI",
@@ -762,7 +762,7 @@ class Program(unittest.TestCase):
 
         Coverted via OCR.
         """
-        l5k.grammar.ROUTINE.parse_string(
+        l5k.grammar.routine.parse_string(
             r"""
             ENCODED_DATA (EncodedType := ROUTINE,
             Name := "Processcontro1",
