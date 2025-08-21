@@ -16,7 +16,8 @@ class Controller(unittest.TestCase):
     def test_standard(self):
         """Ref p60.
 
-        CONFIG blocks with invalid attribute placeholders removed.
+        CONFIG blocks with invalid attribute placeholders removed, and
+        added missing END_CONFIG after WallClockTime.
         """
         l5k.grammar.CONTROLLER.parse_string(
             r"""
@@ -113,6 +114,7 @@ class Controller(unittest.TestCase):
             DCDWaitDelay := 0)
             END_CONFIG
             CONFIG WallClockTime(LocalTimeAdjustment := 0, TimeZone := 0)
+            END_CONFIG
             END_CONTROLLER
             """
         )
@@ -120,7 +122,8 @@ class Controller(unittest.TestCase):
     def test_safety(self):
         """Ref p63.
 
-        CONFIG blocks with invalid attribute placeholders removed.
+        CONFIG blocks with invalid attribute placeholders removed, and
+        added missing END_CONFIG after WallClockTime.
         """
         l5k.grammar.CONTROLLER.parse_string(
             r"""
@@ -249,6 +252,7 @@ class Controller(unittest.TestCase):
             0) END_CONFIG
             CONFIG WallClockTime(LocalTimeAdjustment := 0,
             TimeZone := 0)
+            END_CONFIG
             END_CONTROLLER
             """
         )
