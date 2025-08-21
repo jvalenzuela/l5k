@@ -822,7 +822,7 @@ class Program(unittest.TestCase):
             MyCounter : DINT (RADIX := Decimal) := 0;
             END_TAG
 
-            ST-ROUTINE Running
+            ST_ROUTINE Running
             '//
             '// All information provided "as Is" -- No warranty or implied merchantability.
             '// Refer to the RSLogix 5000 End User License Agreement CEULA) in the Release Notes.
