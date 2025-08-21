@@ -1441,7 +1441,7 @@ class WatchList(unittest.TestCase):
         )
 
 
-class ControllerConifiguration(unittest.TestCase):
+class ControllerConfiguration(unittest.TestCase):
     """Chapter 18."""
 
     def test_df1(self):
