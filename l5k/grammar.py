@@ -527,6 +527,13 @@ QUICK_WATCH = component(
     + pp.ZeroOrMore(WATCH_TAG)
 )
 
+# Safety signature authentication code.
+AUTHENTICATION_CODE = component(
+    "AUTHENTICATION_CODE",
+    pp.common.identifier
+    + attribute_list
+)
+
 # Controller configuration component.
 CONFIG = component(
     "CONFIG",
@@ -548,6 +555,12 @@ CONTROLLER = component(
     + pp.ZeroOrMore(PARAMETER_CONNECTION)
     + pp.ZeroOrMore(TREND)
     + pp.ZeroOrMore(QUICK_WATCH)
+
+    # This component is not listed in the main L5K controller structure
+    # definition; it's location is defined in the Define Safety Signatures
+    # chapter.
+    + pp.Opt(AUTHENTICATION_CODE)
+
     + pp.ZeroOrMore(CONFIG)
 )
 
