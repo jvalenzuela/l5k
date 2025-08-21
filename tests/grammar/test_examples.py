@@ -393,7 +393,10 @@ class AddOnInstruction(unittest.TestCase):
     """Chapter 5."""
 
     def test_encoded(self):
-        """Ref p110."""
+        """Ref p110.
+
+        Added missing comma in EnableIn attributes.
+        """
         l5k.grammar.ADD_ON_INSTRUCTION_DEFINITION.parse_string(
             r"""
             ENCODED_DATA (EncodedType := ADD_ON_INSTRUCTION_DEFINITION,
@@ -415,7 +418,7 @@ class AddOnInstruction(unittest.TestCase):
             PARAMETERS
             EnableIn : BOOL (Description := "Enable Input - System Defined Parameter",
             Usage := Input,
-            RADIX := Decimal
+            RADIX := Decimal,
             Required := No,
             Visible := No,
             ExternalAccess := Read Only);
