@@ -1539,7 +1539,7 @@ class SafetySignatures(unittest.TestCase):
 
     def test_safety_tasks(self):
         """Ref p332."""
-        l5k.grammar.CONTROLLER.parse_string(
+        l5k.grammar.PROGRAM.parse_string(
             r"""
             PROGRAM SafetyProgram (Class := Safety,
             ProgramSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
