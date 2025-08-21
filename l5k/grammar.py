@@ -66,12 +66,20 @@ module_name = pp.Word(pp.alphanums + "_:")
 # Name of a data type, which can also be a module type.
 data_type_name = module_name
 
+# Value on the right side of an attribute assignment.
+attribute_value = pp.MatchFirst([
+    pp.QuotedString('"'),
+
+    # Unquoted values may include spaces, and continue until terminated by
+    # another key/value(comma) or the end of the attribute list(parenthesis).
+    pp.Word(pp.printables, pp.printables + " ", exclude_chars=",)")
+])
+
 # A single attribute key/value assignment.
 attribute = pp.Group(
     pp.Word(pp.printables)
     + assign
-    + (pp.QuotedString('"')
-       | pp.Word(pp.printables + " ", exclude_chars='",)').leave_whitespace())
+    + attribute_value
 )
 
 attribute_list = pp.Opt(
