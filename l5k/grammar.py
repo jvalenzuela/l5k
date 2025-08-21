@@ -493,11 +493,7 @@ PARAMETER_CONNECTION = component(
 # Trend pen definition component.
 PEN = component(
     "PEN",
-
-    # Pen names may include path(\) and structure(.) members separators in
-    # addition to the usual identifier characters.
-    pp.Word(pp.alphanums + r"\_.")
-
+    pp.Word(pp.printables)  # Can be I/O modules, structure, and array members.
     + attribute_list
 )
 
