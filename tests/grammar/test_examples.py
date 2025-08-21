@@ -1502,18 +1502,25 @@ class SafetySignatures(unittest.TestCase):
     """Chapter 20."""
 
     def test_overall_root(self):
-        """Ref p329."""
+        """Ref p329.
+
+        Added mandatory TAG component.
+        """
         l5k.grammar.CONTROLLER.parse_string(
             r"""
             CONTROLLER safety_v36 (SafetySignature := "B3CC8FA3 - 65D512A2 - 25A1A8A7 - A4B46668 - 6F7F560A - 721374FD - B2ED3906 - 36CBACCC, 02/23/2023, 02:41:57.402 PM",
             SafetyRootSignature := "B3CC8FA3 - 65D512A2 - 25A1A8A7 - A4B46668 - 6F7F560A - 721374FD - B2ED3906 - 36CBACCC",
             SafetyRootSignatureTimestamp := "02/09/2023, 01:45:38.445 PM")
+            TAG END_TAG
             END_CONTROLLER
             """
         )
 
     def test_application_rollup(self):
-        """Ref p330."""
+        """Ref p330.
+
+        Added mandatory TAG component.
+        """
         l5k.grammar.CONTROLLER.parse_string(
             r"""
             CONTROLLER safety_v36 (SafetyTagMap := " ctrlTagStandard=ctrlTagSafety, ctrlTagStandard2=ctrlTagSafety2",
@@ -1523,16 +1530,21 @@ class SafetySignatures(unittest.TestCase):
             ControllerAttributesSignatureTimestamp := "02/09/2023, 01:45:38.445 PM",
             ApplicationRollupSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
             ApplicationRollupSignatureTimestamp := "02/09/2023, 01:45:38.445 PM")
+            TAG END_TAG
             END_CONTROLLER
             """
         )
 
     def test_controller_aggregated_safety_tags(self):
-        """Ref p331."""
+        """Ref p331.
+
+        Added mandatory TAG component.
+        """
         l5k.grammar.CONTROLLER.parse_string(
             r"""
             CONTROLLER safety_v36 (TagsRollupSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
             TagsRollupSignatureTimestamp := "02/09/2023, 01:45:38.445 PM")
+            TAG END_TAG
             END_CONTROLLER
             """
         )
@@ -1563,7 +1575,10 @@ class SafetySignatures(unittest.TestCase):
         )
 
     def test_safety_aoi(self):
-        """Ref p334."""
+        """Ref p334.
+
+        Added mandatory TAG component.
+        """
         l5k.grammar.CONTROLLER.parse_string(
             r"""
             CONTROLLER safety_v36 (AoisRollupSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
@@ -1608,6 +1623,7 @@ class SafetySignatures(unittest.TestCase):
             END_PARAMETERS
             ENCODED_DATA_HERE
             END_ENCODED_DATA
+            TAG END_TAG
             END_CONTROLLER
             """
         )
@@ -1615,7 +1631,8 @@ class SafetySignatures(unittest.TestCase):
     def test_safety_modules(self):
         """Ref p336.
 
-        Added missing comma after ModuleSignatureTimestamp attribute.
+        Added missing comma after ModuleSignatureTimestamp attribute, and
+        added mandatory TAG component.
         """
         l5k.grammar.CONTROLLER.parse_string(
             r"""
@@ -1629,6 +1646,7 @@ class SafetySignatures(unittest.TestCase):
             ConnectionSignatureTimestamp := "02/09/2023, 01:45:38.445 PM")
             END_CONNECTION
             END_MODULE
+            TAG END_TAG
             END_CONTROLLER
             """
         )
@@ -1636,12 +1654,12 @@ class SafetySignatures(unittest.TestCase):
     def test_authentication_code(self):
         """Ref p337.
 
-
-        Placeholder (...) removed.
+        Placeholder (...) removed, and mandatory TAG component added.
         """
         l5k.grammar.CONTROLLER.parse_string(
             r"""
             CONTROLLER XmlTest
+            TAG END_TAG
             PROGRAM SafetyProgram END_PROGRAM
             TASK SafetyTask END_TASK
             AUTHENTICATION_CODE SafetySignaturesHmac(Value :=
