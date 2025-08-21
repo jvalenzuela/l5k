@@ -633,6 +633,12 @@ class Tag(unittest.TestCase):
 class Alarm(unittest.TestCase):
     """Chapter 7."""
 
+    def setUp(self):
+        self.skipTest("""
+        Reference documentation does not specify where these components
+        are located within the controller component.
+        """)
+
     def test_alarm_condition(self):
         """Ref p170."""
         l5k.grammar.ALARM_CONDITION.parse_string(
