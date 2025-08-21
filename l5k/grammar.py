@@ -317,20 +317,25 @@ ADD_ON_INSTRUCTION = component(
 SHEET = component(
     "SHEET",
     attribute_list
-    + pp.ZeroOrMore(IREF)
-    + pp.ZeroOrMore(OREF)
-    + pp.ZeroOrMore(ICON)
-    + pp.ZeroOrMore(OCON)
-    + pp.ZeroOrMore(BLOCK)
-    + pp.ZeroOrMore(ADD_ON_INSTRUCTION)
-    + pp.ZeroOrMore(JSR)
-    + pp.ZeroOrMore(SBR)
-    + pp.ZeroOrMore(RET)
-    + pp.ZeroOrMore(WIRE)
-    + pp.ZeroOrMore(FEEDBACK_WIRE)
-    + pp.ZeroOrMore(FUNCTION)
-    + pp.ZeroOrMore(TEXT_BOX)
-    + pp.ZeroOrMore(ATTACHMENT)
+
+    # Sheet elements can occur in any order even though the reference
+    # documentation shows a specific order,
+    + pp.ZeroOrMore(pp.MatchFirst([
+        IREF,
+        OREF,
+        ICON,
+        OCON,
+        BLOCK,
+        ADD_ON_INSTRUCTION,
+        JSR,
+        SBR,
+        RET,
+        WIRE,
+        FEEDBACK_WIRE,
+        FUNCTION,
+        TEXT_BOX,
+        ATTACHMENT,
+    ]))
 )
 
 # Component containing online edits.
