@@ -805,7 +805,7 @@ class Program(unittest.TestCase):
     def test_equipment_phase(self):
         """Ref p194.
 
-        Converted via OCR.
+        Converted via OCR and added missing comma in program attributes.
         """
         l5k.grammar.PROGRAM.parse_string(
             r"""
@@ -816,7 +816,7 @@ class Program(unittest.TestCase):
             Initialstate := Idle,
             CompletestateIfNotImpl := statecomplete,
             Lossofcommcmd := None,
-            ExternalRequestaction := None
+            ExternalRequestaction := None,
             UseAsFolder := 0)
             TAG
             MyCounter : DINT (RADIX := Decimal) := 0;
@@ -1609,13 +1609,16 @@ class SafetySignatures(unittest.TestCase):
         )
 
     def test_safety_modules(self):
-        """Ref p336."""
+        """Ref p336.
+
+        Added missing comma after ModuleSignatureTimestamp attribute.
+        """
         l5k.grammar.CONTROLLER.parse_string(
             r"""
             CONTROLLER safety_v36 (ModulesRollupSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
             ModulesRollupSignatureTimestamp := "02/09/2023, 01:45:38.445 PM")
             MODULE safetyIO (ModuleSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
-            ModuleSignatureTimestamp := "02/09/2023, 01:45:38.445 PM"
+            ModuleSignatureTimestamp := "02/09/2023, 01:45:38.445 PM",
             ConnectionsRollupSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
             ConnectionsRollupSignatureTimestamp := "02/09/2023, 01:45:38.445 PM")
             CONNECTION SafetyInput (ConnectionSignature := "F5AFC204 - 9393CBA7 - 0CC9E546 - 31B67107 - 1EE4D63C - 63C58FAA - 6717B619 - 686CC114",
