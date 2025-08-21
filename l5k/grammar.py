@@ -488,6 +488,17 @@ TAG = component(
     pp.ZeroOrMore(tag_definition)
 )
 
+CHILD_PROGRAMS = component(
+    "CHILD_PROGRAMS",
+
+    # The component end keyword needs to be excluded from program names
+    # because the keyword itself is otherwise a valid program name.
+    pp.ZeroOrMore(
+        pp.NotAny(pp.Keyword("END_CHILD_PROGRAMS"))
+        + pp.common.identifier
+    )
+)
+
 # Component declaring a program.
 PROGRAM = component(
     "PROGRAM",
@@ -495,6 +506,7 @@ PROGRAM = component(
     + attribute_list
     + pp.Opt(TAG)
     + pp.ZeroOrMore(routine)
+    + pp.Opt(CHILD_PROGRAMS)
 )
 
 # Task definition component.
