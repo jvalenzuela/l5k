@@ -16,12 +16,15 @@ Controllers Import/Export Reference Manual, Rockwell Automation Publication
 
 import pyparsing as pp
 
+from . import controller
+
 
 def parse(filename):
     """Parses an L5K file."""
     with open(filename, "r", encoding="utf-8-sig") as f:
         s = f.read()
     result = prj.parse_string(s)
+    return result["controller"]
 
 
 # The remainder of this file is excluded from Black formatting to preserve
@@ -585,8 +588,8 @@ CONFIG = component(
 # Controller definition component.
 CONTROLLER = component(
     "CONTROLLER",
-    pp.common.identifier
-    + attribute_list
+    pp.common.identifier("name")
+    + attribute_list("attributes")
     + pp.ZeroOrMore(DATATYPE)
     + pp.ZeroOrMore(MODULE)
     + pp.ZeroOrMore(aoi_definition)
@@ -604,6 +607,7 @@ CONTROLLER = component(
 
     + pp.ZeroOrMore(CONFIG)
 )
+CONTROLLER.set_parse_action(controller.convert)
 
 # Top-level expression for the entire L5K export.
-prj = header + version + CONTROLLER
+prj = header + version + CONTROLLER("controller")
