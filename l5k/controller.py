@@ -9,6 +9,7 @@ class Controller:
 
     name: str
     attributes: dict
+    datatypes: dict
 
 
 def convert(tokens):
@@ -16,4 +17,5 @@ def convert(tokens):
     return Controller(
         tokens["name"],
         tokens["attributes"][0],
+        datatypes=tokens["datatypes"][0],
     )

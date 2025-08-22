@@ -16,7 +16,10 @@ Controllers Import/Export Reference Manual, Rockwell Automation Publication
 
 import pyparsing as pp
 
-from . import controller
+from . import (
+    controller,
+    datatype,
+)
 
 
 def parse(filename):
@@ -155,24 +158,26 @@ value_list = pp.Group(
 tag_value <<= data_value | value_list
 
 # Statement defining a regular(nonbit) UDT member.
-struct_member = pp.Group(
-    data_type_name
-    + pp.common.identifier
-    + array_dim
-    + attribute_list
+struct_member = (
+    data_type_name("datatype")
+    + pp.common.identifier("name")
+    + array_dim("dim")
+    + attribute_list("attributes")
     + terminator
 )
+struct_member.set_parse_action(datatype.convert_member)
 
 # Statement defining a single-bit UDT member.
 bit_member = (
     pp.Suppress(pp.Keyword("BIT"))
-    + pp.common.identifier
-    + pp.common.identifier
+    + pp.common.identifier("name")
+    + pp.common.identifier("target")
     + pp.Suppress(pp.Literal(":"))
-    + pp.common.integer
-    + attribute_list
+    + pp.common.integer("bit")
+    + attribute_list("attributes")
     + terminator
 )
+bit_member.set_parse_action(datatype.convert_bit_member)
 
 # Statement define a single UDT member of any type.
 data_type_member = struct_member | bit_member
@@ -180,10 +185,11 @@ data_type_member = struct_member | bit_member
 # Data type defintion component.
 DATATYPE = component(
     "DATATYPE",
-    pp.common.identifier
-    + attribute_list
-    + pp.OneOrMore(data_type_member)
+    pp.common.identifier("name")
+    + attribute_list("attributes")
+    + pp.OneOrMore(data_type_member)("members")
 )
+DATATYPE.set_parse_action(datatype.convert_datatype)
 
 # Connection definition component.
 CONNECTION = component(
@@ -590,7 +596,7 @@ CONTROLLER = component(
     "CONTROLLER",
     pp.common.identifier("name")
     + attribute_list("attributes")
-    + pp.ZeroOrMore(DATATYPE)
+    + pp.Dict(pp.ZeroOrMore(DATATYPE), asdict=True)("datatypes")
     + pp.ZeroOrMore(MODULE)
     + pp.ZeroOrMore(aoi_definition)
     + TAG
