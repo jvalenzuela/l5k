@@ -31,3 +31,18 @@ class Attributes(unittest.TestCase):
         """
         ctl = common.parse(data)
         self.assertEqual({"spam": "eggs"}, ctl.attributes)
+
+
+class Tags(unittest.TestCase):
+    """Tests for the tags attribute."""
+
+    def test_no_tags(self):
+        """Confirm default value if no tags were defined."""
+        ctl = common.parse(
+            r"""
+            CONTROLLER foo
+            TAG END_TAG
+            END_CONTROLLER
+            """
+        )
+        self.assertEqual({}, ctl.tags)

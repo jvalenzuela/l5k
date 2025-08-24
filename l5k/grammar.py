@@ -19,6 +19,7 @@ import pyparsing as pp
 from . import (
     controller,
     datatype,
+    tag,
 )
 
 
@@ -123,7 +124,7 @@ prop_list = pp.ZeroOrMore(prop_with_value | prop_no_value)
 # Comma-separated list of integers that may follow a tag name or type.
 array_dim = pp.Opt(
     pp.Suppress(pp.Literal("["))
-    + pp.DelimitedList(pp.common.integer)
+    + pp.DelimitedList(pp.common.integer).set_parse_action(tag.convert_dim)
     + pp.Suppress(pp.Literal("]"))
 )
 
@@ -475,21 +476,22 @@ tag_force_data = pp.Opt(
 
 # Statement defining a tag type not defined by a more specific expression.
 default_tag = (
-    pp.common.identifier
+    pp.common.identifier("name")
     + pp.Suppress(pp.Literal(":"))
-    + pp.common.identifier
-    + array_dim
-    + attribute_list
+    + pp.common.identifier("datatype")
+    + array_dim("dim")
+    + attribute_list("attributes")
 
     # Value is absent for certain types, such as MESSAGE and motion tags.
-    + pp.Opt(assign + tag_value)
+    + pp.Opt(assign + tag_value("value"))
 
     + tag_force_data
     + terminator
 )
+default_tag.set_parse_action(tag.convert_tag)
 
 # Statement defining an alias tag.
-alias_tag = (
+alias_tag = pp.Suppress(
     pp.common.identifier
     + pp.Suppress(pp.Keyword("OF"))
     + pp.Word(pp.printables)
@@ -599,7 +601,7 @@ CONTROLLER = component(
     + pp.Dict(pp.ZeroOrMore(DATATYPE), asdict=True)("datatypes")
     + pp.ZeroOrMore(MODULE)
     + pp.ZeroOrMore(aoi_definition)
-    + TAG
+    + pp.Dict(TAG, asdict=True)("tags")
     + pp.ZeroOrMore(PROGRAM)
     + pp.ZeroOrMore(TASK)
     + pp.ZeroOrMore(PARAMETER_CONNECTION)

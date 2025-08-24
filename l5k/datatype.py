@@ -36,7 +36,7 @@ class Member:
 def convert_member(tokens):
     """Converts parsing tokens into a Member instance."""
     try:
-        dim = tuple(tokens["dim"])
+        dim = tokens["dim"][0]
     except KeyError:
         dim = None
 

@@ -117,7 +117,7 @@ class Member(unittest.TestCase):
         END_CONTROLLER
         """
         ctl = common.parse(data)
-        self.assertEqual((42, 99), ctl.datatypes["myType"].members["member"].dim)
+        self.assertEqual((99, 42), ctl.datatypes["myType"].members["member"].dim)
 
     def test_default_dim(self):
         """Confirm default value if no array dimensions exist."""
