@@ -210,7 +210,7 @@ module_ext_prop = pp.Opt(
 # Module definition component.
 MODULE = component(
     "MODULE",
-    module_name
+    pp.MatchFirst([module_name, pp.Keyword("$NoName")])
     + attribute_list
 
     # Extended properties come before other properties, such as ConfigData,
