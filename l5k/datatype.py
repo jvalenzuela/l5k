@@ -8,8 +8,8 @@ import dataclasses
 class DataType:
     """A user-defined data type."""
 
-    attributes: dict
     members: collections.OrderedDict
+    attributes: dict = dataclasses.field(default_factory=dict)
 
 
 def convert_datatype(tokens):
@@ -29,8 +29,8 @@ class Member:
     """A normal(non-bit) member of a user-defined data type."""
 
     datatype: str
-    dim: tuple
-    attributes: dict
+    dim: tuple = None
+    attributes: dict = dataclasses.field(default_factory=dict)
 
 
 def convert_member(tokens):
@@ -57,7 +57,7 @@ class BitMember:
 
     target: str
     bit: int
-    attributes: dict
+    attributes: dict = dataclasses.field(default_factory=dict)
 
 
 def convert_bit_member(tokens):

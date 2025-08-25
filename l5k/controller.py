@@ -1,6 +1,9 @@
 """Storage representation of the top-level Controller component."""
 
+import copy
 import dataclasses
+
+from . import builtin
 
 
 @dataclasses.dataclass
@@ -19,8 +22,13 @@ class Controller:
 
     def _convert_tag_values(self):
         """Converts tag values across all scopes."""
+        # Combine built-in and user-defined types into a complete set of
+        # data types for value conversion.
+        datatypes = copy.copy(builtin.BUILT_INS)
+        datatypes.update(self.datatypes)
+
         for t in self.tags.values():
-            t.convert_value(self.datatypes)
+            t.convert_value(datatypes)
 
 
 def convert(tokens):
