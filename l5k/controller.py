@@ -14,6 +14,7 @@ class Controller:
     attributes: dict
     datatypes: dict
     tags: dict
+    programs: dict
 
     def __post_init__(self):
         # Tag values are converted after initialization because
@@ -27,8 +28,14 @@ class Controller:
         datatypes = copy.copy(builtin.BUILT_INS)
         datatypes.update(self.datatypes)
 
+        # Controller tags
         for t in self.tags.values():
             t.convert_value(datatypes)
+
+        # Program tags
+        for prg in self.programs.values():
+            for tag in prg.tags.values():
+                tag.convert_value(datatypes)
 
 
 def convert(tokens):
@@ -38,4 +45,5 @@ def convert(tokens):
         tokens["attributes"][0],
         datatypes=tokens["datatypes"][0],
         tags=tokens["tags"][0],
+        programs=tokens["programs"][0],
     )

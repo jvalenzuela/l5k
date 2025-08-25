@@ -46,3 +46,18 @@ class Tags(unittest.TestCase):
             """
         )
         self.assertEqual({}, ctl.tags)
+
+
+class Programs(unittest.TestCase):
+    """Tests for the programs attribute."""
+
+    def test_no_programs(self):
+        """Confirm default value if no programs exist."""
+        ctl = common.parse(
+            """
+            CONTROLLER ctl
+            TAG END_TAG
+            END_CONTROLLER
+            """
+        )
+        self.assertEqual({}, ctl.programs)

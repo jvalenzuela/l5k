@@ -19,6 +19,7 @@ import pyparsing as pp
 from . import (
     controller,
     datatype,
+    program,
     tag,
 )
 
@@ -521,12 +522,13 @@ CHILD_PROGRAMS = component(
 # Component declaring a program.
 PROGRAM = component(
     "PROGRAM",
-    pp.common.identifier
-    + attribute_list
-    + pp.Opt(TAG)
+    pp.common.identifier("name")
+    + attribute_list("attributes")
+    + pp.Opt(pp.Dict(TAG, asdict=True), default={})("tags")
     + pp.ZeroOrMore(routine)
     + pp.Opt(CHILD_PROGRAMS)
 )
+PROGRAM.set_parse_action(program.convert)
 
 # Task definition component.
 TASK = component(
@@ -602,7 +604,7 @@ CONTROLLER = component(
     + pp.ZeroOrMore(MODULE)
     + pp.ZeroOrMore(aoi_definition)
     + pp.Dict(TAG, asdict=True)("tags")
-    + pp.ZeroOrMore(PROGRAM)
+    + pp.Dict(pp.ZeroOrMore(PROGRAM), asdict=True)("programs")
     + pp.ZeroOrMore(TASK)
     + pp.ZeroOrMore(PARAMETER_CONNECTION)
     + pp.ZeroOrMore(TREND)
