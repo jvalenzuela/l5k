@@ -13,6 +13,7 @@ class Controller:
     name: str
     attributes: dict
     datatypes: dict
+    aois: dict
     tags: dict
     programs: dict
 
@@ -44,6 +45,7 @@ def convert(tokens):
         tokens["name"],
         tokens["attributes"][0],
         datatypes=tokens["datatypes"][0],
+        aois=tokens["aois"][0],
         tags=tokens["tags"][0],
         programs=tokens["programs"][0],
     )

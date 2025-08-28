@@ -33,6 +33,36 @@ class Attributes(unittest.TestCase):
         self.assertEqual({"spam": "eggs"}, ctl.attributes)
 
 
+class AddOnInstructions(unittest.TestCase):
+    """Tests for the aois dictionary."""
+
+    def test_no_aois(self):
+        """Confirm default value if no AOIs are defined."""
+        ctl = common.parse(
+            """
+            CONTROLLER foo
+            TAG END_TAG
+            END_CONTROLLER
+            """
+        )
+        self.assertEqual({}, ctl.aois)
+
+    def test_encoded(self):
+        """Confirm encoded AOIs are excluded."""
+        ctl = common.parse(
+            """
+            CONTROLLER foo
+            ENCODED_DATA (EncodedType := ADD_ON_INSTRUCTION_DEFINITION,
+            Name := "Conveyor_Control")
+            foo_bar
+            END_ENCODED_DATA
+            TAG END_TAG
+            END_CONTROLLER
+            """
+        )
+        self.assertEqual({}, ctl.aois)
+
+
 class Tags(unittest.TestCase):
     """Tests for the tags attribute."""
 

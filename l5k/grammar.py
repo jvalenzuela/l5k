@@ -17,6 +17,7 @@ Controllers Import/Export Reference Manual, Rockwell Automation Publication
 import pyparsing as pp
 
 from . import (
+    aoi,
     controller,
     datatype,
     program,
@@ -400,13 +401,14 @@ HISTORY_ENTRY = component(
 
 # Statement definining a single AOI parameter.
 parameter = (
-    pp.common.identifier
+    pp.common.identifier("name")
     + pp.Suppress(pp.Literal(":"))
-    + data_type_name
-    + array_dim
-    + attribute_list
+    + data_type_name("datatype")
+    + array_dim("dim")
+    + attribute_list("attributes")
     + terminator
 )
+parameter.add_parse_action(datatype.convert_member)
 
 # AOI parameter definition component
 PARAMETERS = component(
@@ -437,13 +439,14 @@ routine = pp.Or([
 
 # Statement defining a single AOI local tag.
 local_tag = (
-    pp.common.identifier
+    pp.common.identifier("name")
     + pp.Suppress(pp.Literal(":"))
-    + pp.common.identifier
-    + array_dim
-    + attribute_list
+    + pp.common.identifier("datatype")
+    + array_dim("dim")
+    + attribute_list("attributes")
     + terminator
 )
+local_tag.add_parse_action(datatype.convert_member)
 
 # AOI local tag definition component.
 LOCAL_TAGS = component(
@@ -457,16 +460,17 @@ LOCAL_TAGS = component(
 # AOI definition block.
 ADD_ON_INSTRUCTION_DEFINITION = component(
     "ADD_ON_INSTRUCTION_DEFINITION",
-    pp.common.identifier
-    + attribute_list
+    pp.common.identifier("name")
+    + attribute_list("attributes")
     + pp.ZeroOrMore(HISTORY_ENTRY)
-    + pp.Opt(PARAMETERS)
-    + pp.Opt(LOCAL_TAGS)
+    + pp.Opt(PARAMETERS, default=[])("parameters")
+    + pp.Opt(LOCAL_TAGS, default=[])("local_tags")
     + pp.ZeroOrMore(routine)
 )
+ADD_ON_INSTRUCTION_DEFINITION.set_parse_action(aoi.convert)
 
 # An actual AOI definition may be unencoded or encoded.
-aoi_definition = pp.Or([ADD_ON_INSTRUCTION_DEFINITION, ENCODED_DATA])
+aoi_definition = pp.Or([ADD_ON_INSTRUCTION_DEFINITION, pp.Suppress(ENCODED_DATA)])
 
 tag_force_data = pp.Opt(
     pp.Suppress(pp.Literal(","))
@@ -602,7 +606,7 @@ CONTROLLER = component(
     + attribute_list("attributes")
     + pp.Dict(pp.ZeroOrMore(DATATYPE), asdict=True)("datatypes")
     + pp.ZeroOrMore(MODULE)
-    + pp.ZeroOrMore(aoi_definition)
+    + pp.Dict(pp.ZeroOrMore(aoi_definition), asdict=True)("aois")
     + pp.Dict(TAG, asdict=True)("tags")
     + pp.Dict(pp.ZeroOrMore(PROGRAM), asdict=True)("programs")
     + pp.ZeroOrMore(TASK)
