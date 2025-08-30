@@ -58,8 +58,8 @@ header = pp.Opt(pp.Suppress(
     + pp.Literal("*)")
 ))
 
-assign = pp.Suppress(pp.Literal(":="))
-terminator = pp.Suppress(pp.Literal(";"))
+assign = pp.Suppress(":=")
+terminator = pp.Suppress(";")
 
 # Version statement following the header.
 version = pp.Suppress(
@@ -92,9 +92,9 @@ attribute = pp.Group(
 )
 
 attribute_list = pp.Opt(
-    pp.Suppress(pp.Literal("("))
+    pp.Suppress("(")
     + pp.Dict(pp.DelimitedList(attribute), asdict=True)
-    + pp.Suppress(pp.Literal(")")),
+    + pp.Suppress(")"),
     default={}
 )
 
@@ -125,17 +125,17 @@ prop_list = pp.ZeroOrMore(prop_with_value | prop_no_value)
 
 # Comma-separated list of integers that may follow a tag name or type.
 array_dim = pp.Opt(
-    pp.Suppress(pp.Literal("["))
+    pp.Suppress("[")
     + pp.DelimitedList(pp.common.integer).set_parse_action(tag.convert_dim)
-    + pp.Suppress(pp.Literal("]"))
+    + pp.Suppress("]")
 )
 
-binary_value = pp.Suppress(pp.Literal("2#")) + pp.Regex(r"[_01]+")
+binary_value = pp.Suppress("2#") + pp.Regex(r"[_01]+")
 binary_value.add_parse_action(lambda toks: int(toks[0], 2))
-octal_value = pp.Suppress(pp.Literal("8#")) + pp.Regex(r"[_0-7]+")
+octal_value = pp.Suppress("8#") + pp.Regex(r"[_0-7]+")
 octal_value.add_parse_action(lambda toks: int(toks[0], 8))
 decimal_value = pp.common.signed_integer
-hex_value = pp.Suppress(pp.Literal("16#")) + pp.common.hex_integer
+hex_value = pp.Suppress("16#") + pp.common.hex_integer
 ascii_value = pp.QuotedString("'")
 exp_value = pp.common.sci_real
 float_value = pp.common.real
@@ -154,9 +154,9 @@ data_value = pp.Or([
 # be a single value, or a list of, possibly nested, values.
 tag_value = pp.Forward()
 value_list = pp.Group(
-    pp.Suppress(pp.Literal("["))
+    pp.Suppress("[")
     + pp.DelimitedList(tag_value)
-    + pp.Suppress(pp.Literal("]"))
+    + pp.Suppress("]")
 )
 tag_value <<= data_value | value_list
 
@@ -175,7 +175,7 @@ bit_member = (
     pp.Suppress(pp.Keyword("BIT"))
     + pp.common.identifier("name")
     + pp.common.identifier("target")
-    + pp.Suppress(pp.Literal(":"))
+    + pp.Suppress(":")
     + pp.common.integer("bit")
     + attribute_list("attributes")
     + terminator
@@ -203,7 +203,7 @@ CONNECTION = component(
 )
 
 module_ext_prop = pp.Opt(
-    pp.Suppress(pp.Literal("ExtendedProp"))
+    pp.Suppress("ExtendedProp")
     + assign
     + pp.QuotedString("[[[___", end_quote_char="___]]]")
 )
@@ -250,7 +250,7 @@ ROUTINE = component(
 )
 
 # Single line of structured text
-st_line = pp.Suppress(pp.Literal("'")) + pp.rest_of_line
+st_line = pp.Suppress("'") + pp.rest_of_line
 
 PRESET = component("PRESET", attribute_list + pp.ZeroOrMore(st_line))
 LIMITHIGH = component("LIMITHIGH", attribute_list + pp.ZeroOrMore(st_line))
@@ -402,7 +402,7 @@ HISTORY_ENTRY = component(
 # Statement definining a single AOI parameter.
 parameter = (
     pp.common.identifier("name")
-    + pp.Suppress(pp.Literal(":"))
+    + pp.Suppress(":")
     + data_type_name("datatype")
     + array_dim("dim")
     + attribute_list("attributes")
@@ -440,7 +440,7 @@ routine = pp.Or([
 # Statement defining a single AOI local tag.
 local_tag = (
     pp.common.identifier("name")
-    + pp.Suppress(pp.Literal(":"))
+    + pp.Suppress(":")
     + pp.common.identifier("datatype")
     + array_dim("dim")
     + attribute_list("attributes")
@@ -473,7 +473,7 @@ ADD_ON_INSTRUCTION_DEFINITION.set_parse_action(aoi.convert)
 aoi_definition = pp.Or([ADD_ON_INSTRUCTION_DEFINITION, pp.Suppress(ENCODED_DATA)])
 
 tag_force_data = pp.Opt(
-    pp.Suppress(pp.Literal(","))
+    pp.Suppress(",")
     + pp.Suppress(pp.Keyword("TagForceData"))
     + assign
     + tag_value
@@ -482,7 +482,7 @@ tag_force_data = pp.Opt(
 # Statement defining a tag type not defined by a more specific expression.
 default_tag = (
     pp.common.identifier("name")
-    + pp.Suppress(pp.Literal(":"))
+    + pp.Suppress(":")
     + pp.common.identifier("datatype")
     + array_dim("dim")
     + attribute_list("attributes")
