@@ -77,7 +77,11 @@ def convert_value(datatypes, type_name, dim, raw):
     except KeyError:
         return raw
 
-    return struct_value(datatypes, this_type, raw)
+    try:
+        this_type.local_tags
+    except AttributeError:
+        return struct_value(datatypes, this_type, raw)
+    return aoi_value(datatypes, this_type, raw)
 
 
 def struct_value(datatypes, this_type, raw):
@@ -159,3 +163,35 @@ def array_value(datatypes, this_type, dim, raw):
         array.append(item)
 
     return array
+
+
+def aoi_value(datatypes, aoi, raw):
+    """Converts raw tag data into a structured AOI value."""
+    value = {}
+    for name, member in aoi.value_members.items():
+        # Skip packed BOOLs that have already been converted.
+        if name in value:
+            continue
+
+        next_raw = raw.pop(0)
+
+        # See if this is a packed BOOL member.
+        try:
+            bits = aoi.packed_bools[name]
+
+        # Convert nonpacked BOOL members.
+        except KeyError:
+            value[name] = convert_value(
+                datatypes,
+                member.datatype,
+                member.dim,
+                next_raw,
+            )
+
+        # Extract all members packed from this DINT value.
+        else:
+            for bname in bits:
+                value[bname] = next_raw & 1
+                next_raw >>= 1
+
+    return value

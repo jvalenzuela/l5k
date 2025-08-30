@@ -128,6 +128,8 @@ class Parameters(unittest.TestCase):
             CONTROLLER ctl
             ADD_ON_INSTRUCTION_DEFINITION aoi
 		PARAMETERS
+                EnableIn : BOOL;
+                EnableOut : BOOL;
                 spam : DINT;
                 bar : DINT;
                 foo : DINT;
@@ -139,9 +141,55 @@ class Parameters(unittest.TestCase):
             """
         )
         self.assertEqual(
-            ["spam", "bar", "foo", "eggs"],
+            ["EnableIn", "EnableOut", "spam", "bar", "foo", "eggs"],
             list(ctl.aois["aoi"].parameters.keys()),
         )
+
+    def test_empty(self):
+        """Confirm default parameters if none are present in the definition."""
+        ctl = common.parse(
+            """
+            CONTROLLER ctl
+            ADD_ON_INSTRUCTION_DEFINITION aoi
+		PARAMETERS
+		END_PARAMETERS
+            END_ADD_ON_INSTRUCTION_DEFINITION
+            TAG END_TAG
+            END_CONTROLLER
+            """
+        )
+        self.assert_default(ctl)
+
+    def test_no_enable_inout(self):
+        """Confirm EnableIn & EnableOut are added if not explicitly listed."""
+        ctl = common.parse(
+            """
+            CONTROLLER ctl
+            ADD_ON_INSTRUCTION_DEFINITION aoi
+		PARAMETERS
+                foo : DINT;
+		END_PARAMETERS
+            END_ADD_ON_INSTRUCTION_DEFINITION
+            TAG END_TAG
+            END_CONTROLLER
+            """
+        )
+        self.assert_default(ctl)
+
+    def assert_default(self, ctl):
+        """Confirms EnableIn and EnableOut are the first two parameters."""
+        self.assertEqual(
+            ["EnableIn", "EnableOut"],
+            list(ctl.aois["aoi"].parameters.keys())[:2],
+        )
+
+        enable_in = ctl.aois["aoi"].parameters["EnableIn"]
+        self.assertEqual("BOOL", enable_in.datatype)
+        self.assertEqual({"Usage": "Input"}, enable_in.attributes)
+
+        enable_out = ctl.aois["aoi"].parameters["EnableOut"]
+        self.assertEqual("BOOL", enable_out.datatype)
+        self.assertEqual({"Usage": "Output"}, enable_out.attributes)
 
 
 class LocalTags(unittest.TestCase):

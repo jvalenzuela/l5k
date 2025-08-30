@@ -24,9 +24,10 @@ class Controller:
 
     def _convert_tag_values(self):
         """Converts tag values across all scopes."""
-        # Combine built-in and user-defined types into a complete set of
+        # Combine built-in, AOIs, and user-defined types into a complete set of
         # data types for value conversion.
         datatypes = copy.copy(builtin.BUILT_INS)
+        datatypes.update(self.aois)
         datatypes.update(self.datatypes)
 
         # Controller tags
