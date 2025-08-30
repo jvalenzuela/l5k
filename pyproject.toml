@@ -1,0 +1,38 @@
+[build-system]
+requires = [
+    "hatchling",
+]
+build-backend = "hatchling.build"
+
+
+[project]
+name = "l5k"
+version = "0.1"
+description = "Logix 5000 L5K parser."
+authors = [
+    {name = "Jason Valenzuela"},
+    {email = "jvalenzuela1977@gmail.com"},
+]
+license = {file = "LICENSE.txt"}
+requires-python = ">= 3.10, < 3.14"
+dependencies = [
+    "pyparsing",
+]
+classifiers = [
+    "Environment :: Console",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Text Processing",
+]
+
+
+[project.urls]
+Homepage = "https://github.com/jvalenzuela/l5k"
+Repository = "https://github.com/jvalenzuela/l5k.git"
+Issues = "https://github.com/jvalenzuela/l5k/issues"
