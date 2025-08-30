@@ -27,9 +27,7 @@ from . import (
 
 def parse(filename):
     """Parses an L5K file."""
-    with open(filename, "r", encoding="utf-8-sig") as f:
-        s = f.read()
-    result = prj.parse_string(s)
+    result = prj.parse_file(filename, encoding="utf-8-sig")
     return result["controller"]
 
 
