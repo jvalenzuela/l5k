@@ -17,7 +17,7 @@ class StructureValue(unittest.TestCase):
             f"""
             CONTROLLER ctl
             TAG
-            tag : CONTROL := {raw};
+            tag : {self.DATATYPE} := {raw};
             END_TAG
             END_CONTROLLER
             """
@@ -86,8 +86,10 @@ class Control(StructureValue):
         self.assert_value("[0,0,42]", POS=42)
 
 
-class Counter(unittest.TestCase):
+class Counter(StructureValue):
     """COUNTER value tests."""
+
+    DATATYPE = "COUNTER"
 
     def test_pre(self):
         """Confirm correct preset value."""
@@ -117,34 +119,11 @@ class Counter(unittest.TestCase):
         """Confirm correct underflow value."""
         self.assert_value("[134217728,0,0]", UN=1)
 
-    def assert_value(self, raw, *, PRE=0, ACC=0, CU=0, CD=0, DN=0, OV=0, UN=0):
-        """Verifies raw data is converted to the correct structured value."""
-        # Allow default arguments for all members.
-        # pylint: disable=too-many-arguments
 
-        ctl = common.parse(
-            f"""
-            CONTROLLER ctl
-            TAG
-            tag : COUNTER := {raw};
-            END_TAG
-            END_CONTROLLER
-            """
-        )
-        expected = {
-            "PRE": PRE,
-            "ACC": ACC,
-            "CU": CU,
-            "CD": CD,
-            "DN": DN,
-            "OV": OV,
-            "UN": UN,
-        }
-        self.assertEqual(expected, ctl.tags["tag"].value)
-
-
-class Timer(unittest.TestCase):
+class Timer(StructureValue):
     """TIMER value tests."""
+
+    DATATYPE = "TIMER"
 
     def test_pre(self):
         """Confirm correct preset value."""
@@ -165,26 +144,3 @@ class Timer(unittest.TestCase):
     def test_dn(self):
         """Confirm correct done value."""
         self.assert_value("[536870912,0,0]", DN=1)
-
-    def assert_value(self, raw, *, PRE=0, ACC=0, EN=0, TT=0, DN=0):
-        """Verifies raw data is converted to the correct structured value."""
-        # Allow default arguments for all members.
-        # pylint: disable=too-many-arguments
-
-        ctl = common.parse(
-            f"""
-            CONTROLLER ctl
-            TAG
-            tag : TIMER := {raw};
-            END_TAG
-            END_CONTROLLER
-            """
-        )
-        expected = {
-            "PRE": PRE,
-            "ACC": ACC,
-            "EN": EN,
-            "TT": TT,
-            "DN": DN,
-        }
-        self.assertEqual(expected, ctl.tags["tag"].value)
