@@ -481,7 +481,7 @@ tag_force_data = pp.Opt(
 default_tag = (
     pp.common.identifier("name")
     + pp.Suppress(":")
-    + pp.common.identifier("datatype")
+    + data_type_name("datatype")
     + array_dim("dim")
     + attribute_list("attributes")
 
